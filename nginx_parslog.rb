@@ -91,8 +91,8 @@ i50 = f.at(c50)
 i75 = f.at(c75)
 i95 = f.at(c95)
 puts "Total count of HTTP200 is - #{c95}"
-puts "95% percentil is #{i95.last} ms"
-puts "75% percentil is #{i75.last} ms"
-puts "50% percentil is #{i50.last} ms"
-puts "25% percentil is #{i25.last} ms"
+puts "95% percentile is #{i95.last} ms"
+puts "75% percentile is #{i75.last} ms"
+puts "50% percentile is #{i50.last} ms"
+puts "25% percentile is #{i25.last} ms"
 
