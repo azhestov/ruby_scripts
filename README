@@ -13,3 +13,11 @@ and follow simple menus
 Usage:
 nginx_parslog.rb log_filename [200 position] [time position]
 
+Output example:
+$./nginx_parslog.rb ../acc.log 5 9
+Total count of HTTP200 is - 7403
+95% percentile is 0.951 ms
+75% percentile is 0.754 ms
+50% percentile is 0.501 ms
+25% percentile is 0.254 ms
+
