@@ -3,8 +3,7 @@
 #checks
 
 
-#if (ARGV.count < 1 || ARGV[0] = "-h" || ARGV[0] = "--help") 
-if ARGV.count < 1
+if (ARGV.count < 1 || ARGV[0] == "-h" || ARGV[0] == "--help") 
 	puts "Usage: nginx_parslog.rb access_log_filename [HTTP response code position] [request time position]"
 	puts "If you not shure - add filename only and follow instructions"
 	exit 254
@@ -49,22 +48,20 @@ if $response_pos.empty? or $rtime_pos.empty?
 	end
 
 	while  $rtime_pos.empty? or $rt == $rp
-		$lengh = $codescan.count -1 
-	
 		puts `clear`
 		puts "enter request time position\n\n"
 		$codescan.each_with_index { |code, ind| puts "#{ind}:\t#{code}" }
 		$rtime_pos = STDIN.gets.chomp
 		$rt = Integer($rtime_pos) rescue nil
-		if $rt != $rp
+		if $rt == $rp
+			$rtime_pos = ''
+		else
 			case $rt
 				when 0..$lengh
 				break
-		 	else 
+		 	else
 				$rtime_pos = ''
 			end
-		else
-			$rtime_pos = ''
 		end
 	end
 
