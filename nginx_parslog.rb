@@ -53,15 +53,10 @@ if $response_pos.empty? or $rtime_pos.empty?
 		$codescan.each_with_index { |code, ind| puts "#{ind}:\t#{code}" }
 		$rtime_pos = STDIN.gets.chomp
 		$rt = Integer($rtime_pos) rescue nil
-		if $rt == $rp
+		case $rt
+			when 0..$lengh
+	 	else
 			$rtime_pos = ''
-		else
-			case $rt
-				when 0..$lengh
-				break
-		 	else
-				$rtime_pos = ''
-			end
 		end
 	end
 
