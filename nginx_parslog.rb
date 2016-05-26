@@ -40,8 +40,7 @@ if $response_pos.empty? or $rtime_pos.empty?
 		$response_pos = STDIN.gets.chomp
 		$rp = Integer($response_pos) rescue nil
 		case $rp
-		 when 0..$lengh
-			break
+		 	when 0..$lengh
 		 else 
 			$response_pos = ''
 		end
