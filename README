@@ -25,5 +25,5 @@ Total count of HTTP200 is - 7403 from 7793 total.
 
 Max response time is 1.422 msec
 
-ToDo: zipped log reading
-
+ToDo: zipped log reading, simple output for external scripts
+	
