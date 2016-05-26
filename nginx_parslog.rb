@@ -6,7 +6,7 @@
 if (ARGV.count < 1 || ARGV[0] == "-h" || ARGV[0] == "--help") 
 	puts "Usage: nginx_parslog.rb access_log_filename [HTTP response code position] [request time position]"
 	puts "If you not shure - add filename only and follow instructions"
-	exit 254
+	exit(254)
 end
 
 $filename = ARGV[0]
@@ -15,7 +15,7 @@ $rtime_pos = ARGV[2]||''
 
 if not File.exist?($filename)
 	puts "File #{$filename} not found"
-	exit 255
+	exit(255)
 end
 
 #scan first line and parsing
@@ -26,34 +26,37 @@ $codescan.each do |code|
 	code.each(&:lstrip!) 
 	code.each { |p| p.tr!('"','')}
 end
+$codescan.flatten!
+$lengh = $codescan.length
+
 
 #if not all arguments
-
+prompt = '>'
 if $response_pos.empty? or $rtime_pos.empty?
 
 	while  $response_pos.empty?
-		$lengh = $codescan.count - 1
-		
-		puts `clear`
-		puts "enter HHTP response code position\n\n"
+		puts `clear`, "\n\n"
 		$codescan.each_with_index { |code, ind| puts "#{ind}:\t#{code}" }
+		puts "\nenter HHTP response code position\n\n"
+		print prompt
 		$response_pos = STDIN.gets.chomp
 		$rp = Integer($response_pos) rescue nil
 		case $rp
-		 	when 0..$lengh
+		 	when 0...$lengh
 		 else 
 			$response_pos = ''
 		end
 	end
 
 	while  $rtime_pos.empty? or $rt == $rp
-		puts `clear`
-		puts "enter request time position\n\n"
+		puts `clear`, "\n\n"
 		$codescan.each_with_index { |code, ind| puts "#{ind}:\t#{code}" }
+		puts "\nenter request time position\n\n"
+		print prompt
 		$rtime_pos = STDIN.gets.chomp
 		$rt = Integer($rtime_pos) rescue nil
 		case $rt
-			when 0..$lengh
+			when 0...$lengh
 	 	else
 			$rtime_pos = ''
 		end
@@ -81,7 +84,7 @@ end
 
 #calculate values
 
-c = fields.count.to_i
+c = fields.length
 f = fields.sort
 l = f.last
 perc = [25,50,75,95]
