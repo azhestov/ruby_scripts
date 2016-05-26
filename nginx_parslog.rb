@@ -11,6 +11,11 @@ $filename = ARGV[0]
 $response_pos = ARGV[1]||''
 $rtime_pos = ARGV[2]||''
 
+if not File.exist?($filename)
+puts "File #{$filename} not found"
+exit 255
+end
+
 if $response_pos.empty? or $rtime_pos.empty?
 
 while  $response_pos.empty?
