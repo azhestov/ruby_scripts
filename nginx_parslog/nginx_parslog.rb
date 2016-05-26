@@ -1,5 +1,5 @@
 #!/usr/bin/ruby
-
+require "zlib"
 #checks
 
 
@@ -18,9 +18,23 @@ if not File.exist?($filename)
 	exit(255)
 end
 
+filetype = `file --brief --mime-type #{$filename}`.chomp
+
+case filetype
+when "text/plain"
+	field_values = File.readlines($filename).first
+when "application/gzip"
+	infile = File.open($filename)
+	gz = Zlib::GzipReader.new(infile)
+	field_values = gz.readline
+	gz.close
+else
+	puts "Wrong file format"
+	exit(250)
+end
+
 #scan first line and parsing
 
-field_values = File.readlines($filename).first
 $codescan=field_values.scan(/(\[[^\[]+\]|"[^"]+"|^\S+|\s[^"\[\s]+)/)
 $codescan.each do |code| 
 	code.each(&:lstrip!) 
@@ -42,8 +56,8 @@ if $response_pos.empty? or $rtime_pos.empty?
 		$response_pos = STDIN.gets.chomp
 		$rp = Integer($response_pos) rescue nil
 		case $rp
-		 	when 0...$lengh
-		 else 
+	 	when 0...$lengh
+		else 
 			$response_pos = ''
 		end
 	end
@@ -56,7 +70,7 @@ if $response_pos.empty? or $rtime_pos.empty?
 		$rtime_pos = STDIN.gets.chomp
 		$rt = Integer($rtime_pos) rescue nil
 		case $rt
-			when 0...$lengh
+		when 0...$lengh
 	 	else
 			$rtime_pos = ''
 		end
@@ -64,28 +78,46 @@ if $response_pos.empty? or $rtime_pos.empty?
 
 end
 
-fields = Array.new()
 
 #scan log file
 
-File.readlines($filename).each do |line|
+$fields = Array.new()
 
+def scan_line(line)
 	linescan=line.scan(/(\[[^\[]+\]|"[^"]+"|^\S+|\s[^"\[\s]+)/)
-
 	linescan.each do |l|
 		l.each(&:lstrip!)
 		l.each { |p| p.tr!('"','')}
 	end
         c = linescan.at($response_pos.to_i)
 	if c.last == "200"
-		fields.push(linescan[$rtime_pos.to_i]) 
+		$fields.push(linescan[$rtime_pos.to_i]) 
 	end
 end
 
+case filetype
+when "text/plain"
+	#content = File.open($filename)
+	File.readlines($filename).each do |l|
+		scan_line(l)
+	end
+when "application/gzip"
+	zipfile = File.open($filename)
+	gz = Zlib::GzipReader.new(zipfile)
+	gz.each_line do |l|
+		scan_line(l)
+	end
+	gz.close
+else
+	puts "Wrong file format"
+	exit(250)
+end
+
+
 #calculate values
 
-c = fields.length
-f = fields.sort
+c = $fields.length
+f = $fields.sort
 l = f.last
 perc = [25,50,75,95]
 puts "\nTotal count of HTTP200 is - #{(c*0.95).to_i} from #{c}.\n\n"
