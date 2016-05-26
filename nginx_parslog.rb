@@ -1,6 +1,10 @@
 #!/usr/bin/ruby
+
 #checks
-if (ARGV.count < 1 || ARGV[0] = "-h" || ARGV[0] = "--help") 
+
+
+#if (ARGV.count < 1 || ARGV[0] = "-h" || ARGV[0] = "--help") 
+if ARGV.count < 1
 	puts "Usage: nginx_parslog.rb access_log_filename [HTTP response code position] [request time position]"
 	puts "If you not shure - add filename only and follow instructions"
 	exit 254
@@ -94,6 +98,10 @@ i50 = f.at((c*0.50).to_i)
 i75 = f.at((c*0.75).to_i)
 i95 = f.at((c*0.95).to_i)
 puts "\nTotal count of HTTP200 is - #{(c*0.95).to_i} from #{c}.\n\n"
+#perc = [25,50,75,95]
+#for i in perc do
+#puts "#{i}% percentile is #{f.at((c*95/100).to_i)} msec"
+#end
 puts "95% percentile is #{i95.last} msec"
 puts "75% percentile is #{i75.last} msec"
 puts "50% percentile is #{i50.last} msec"
