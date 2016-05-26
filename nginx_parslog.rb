@@ -1,6 +1,6 @@
 #!/usr/bin/ruby
 #checks
-if (ARGV.count < 1 || ARGV[0] = "-h") 
+if (ARGV.count < 1 || ARGV[0] = "-h" || ARGV[0] = "--help") 
 	puts "Usage: nginx_parslog.rb access_log_filename [HTTP response code position] [request time position]"
 	puts "If you not shure - add filename only and follow instructions"
 	exit 254
