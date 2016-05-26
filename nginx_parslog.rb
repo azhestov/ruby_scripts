@@ -80,19 +80,20 @@ File.readlines($filename).each do |line|
 	end
 end
 
-c = fields.count
+$c = fields.count.to_i
 f = fields.sort
-c25 = (c*0.25).to_i
-c50 = (c*0.50).to_i
-c75 = (c*0.75).to_i
-c95 = (c*0.95).to_i
-i25 = f.at(c25)
-i50 = f.at(c50)
-i75 = f.at(c75)
-i95 = f.at(c95)
-puts "Total count of HTTP200 is - #{c95}"
-puts "95% percentile is #{i95.last} ms"
-puts "75% percentile is #{i75.last} ms"
-puts "50% percentile is #{i50.last} ms"
-puts "25% percentile is #{i25.last} ms"
-
+l = f.last
+$c25 = $c * 0.25
+$c50 = $c * 0.50
+$c75 = $c * 0.75
+$c95 = $c * 0.95
+i25 = f.at($c25)
+i50 = f.at($c50)
+i75 = f.at($c75)
+i95 = f.at($c95)
+puts "\nTotal count of HTTP200 is - #{$c95.to_i} from #{$c}.\n\n"
+puts "95% percentile is #{i95.last} msec"
+puts "75% percentile is #{i75.last} msec"
+puts "50% percentile is #{i50.last} msec"
+puts "25% percentile is #{i25.last} msec"
+puts "\nMax response time is #{l.last} msec\n\n"
