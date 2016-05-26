@@ -2,7 +2,7 @@
 #checks
 if ARGV.count < 1 
 	puts "Arguments missed"
-	puts "Usage: nginx_parser.rb access_log_filename [HTTP response code position] [request time position]"
+	puts "Usage: nginx_parslog.rb access_log_filename [HTTP response code position] [request time position]"
 	puts "If you not shure - add filename only and follow instructions"
 	exit 254
 end
