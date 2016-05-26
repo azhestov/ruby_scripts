@@ -46,7 +46,7 @@ if $response_pos.empty? or $rtime_pos.empty?
 	end
 
 	while  $rtime_pos.empty? or $rt == $rp
-		$lengh = $codescan.count 
+		$lengh = $codescan.count -1 
 	
 		puts `clear`
 		puts "enter request time position\n\n"
@@ -79,7 +79,6 @@ File.readlines($filename).each do |line|
 		l.each(&:lstrip!)
 		l.each { |p| p.tr!('"','')}
 	end
-	#puts "#{line}"
         c = linescan.at($response_pos.to_i)
 	if c.last == "200"
 		fields.push(linescan[$rtime_pos.to_i]) 
