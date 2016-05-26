@@ -18,11 +18,11 @@ $./nginx_parslog.rb ../acc.log 5 9
 
 Total count of HTTP200 is - 7403 from 7793 total.
 
-95% percentile is 0.951 msec
-75% percentile is 0.754 msec
-50% percentile is 0.501 msec
-25% percentile is 0.254 msec
+95% percentile is 1.251 msec
+75% percentile is 0.654 msec
+50% percentile is 0.301 msec
+25% percentile is 0.054 msec
 
-Max response time is 1.000 msec
+Max response time is 1.422 msec
 
 
