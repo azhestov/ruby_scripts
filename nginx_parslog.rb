@@ -63,9 +63,9 @@ if $response_pos.empty? or $rtime_pos.empty?
 		else
 			$rtime_pos = ''
 		end
-end
+	end
 
-end #if
+end
 
 fields = Array.new()
 
