@@ -33,4 +33,4 @@ ToDo:
 simple output for external scripts
 opimization for big logs
 read from stream
-	
+read from socket	
