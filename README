@@ -7,7 +7,9 @@ nginx_parslog.rb is simple tool for calculate HTTP 200 response time
 at you nginx log format and remember field number for $status and 
 $request_time. Fields numbering starts from zero.
 
-gzipped log is supported too.
+Gzipped log is supported too. WARN - it's a simple hack with call 
+linux "file" command for check mime-type, so script may not work on
+Mac\Win hosts at all yet. 
 
 If you not sure, just start nginx_parslog with filename of your log
 and follow simple menus
