@@ -43,6 +43,26 @@ end
 $codescan.flatten!
 $lengh = $codescan.length
 
+#check arguments values
+
+$rop = Integer($response_pos) rescue nil
+$rot = Integer($rtime_pos) rescue nil
+if $rop >= $lengh
+puts "$status field can't be more #{$lengh-1}"
+exit(253)
+end
+
+if $rot >= $lengh
+puts "$request_time field can't be more #{$lengh-1}"
+exit(253)
+end
+
+
+if $rot == $rop
+puts "$status field can't be equal $request_time"
+exit(253)
+end
+
 
 #if not all arguments
 prompt = '>'
