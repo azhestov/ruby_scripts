@@ -1,8 +1,7 @@
 #!/usr/bin/ruby
 require "zlib"
+
 #checks
-
-
 if (ARGV.count < 1 || ARGV[0] == "-h" || ARGV[0] == "--help") 
 	puts "Usage: nginx_parslog.rb access_log_filename [HTTP response code position] [request time position]"
 	puts "If you not shure - add filename only and follow instructions"
@@ -18,8 +17,9 @@ if not File.exist?($filename)
 	exit(255)
 end
 
+#mime-type hack
 filetype = `file --brief --mime-type #{$filename}`.chomp
-
+#read first line
 case filetype
 when "text/plain"
 	field_values = File.readlines($filename).first
@@ -34,7 +34,6 @@ else
 end
 
 #scan first line and parsing
-
 $codescan=field_values.scan(/(\[[^\[]+\]|"[^"]+"|^\S+|\s[^"\[\s]+)/)
 $codescan.each do |code| 
 	code.each(&:lstrip!) 
@@ -44,23 +43,24 @@ $codescan.flatten!
 $lengh = $codescan.length
 
 #check arguments values
-
 $rop = Integer($response_pos) rescue nil
 $rot = Integer($rtime_pos) rescue nil
+
+if ($rop == nil || $rot == nil)
+	puts "unknown arguments format, use number values"
+	exit(253)
+end
 if $rop >= $lengh
-puts "$status field can't be more #{$lengh-1}"
-exit(253)
+	puts "$status field can't be more #{$lengh-1}"
+	exit(253)
 end
-
 if $rot >= $lengh
-puts "$request_time field can't be more #{$lengh-1}"
-exit(253)
+	puts "$request_time field can't be more #{$lengh-1}"
+	exit(253)
 end
-
-
 if $rot == $rop
-puts "$status field can't be equal $request_time"
-exit(253)
+	puts "$status field can't be equal $request_time"
+	exit(253)
 end
 
 
