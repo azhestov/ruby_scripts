@@ -2,7 +2,7 @@
 require "zlib"
 
 #checks
-if (ARGV.count < 1 || ARGV[0] == "-h" || ARGV[0] == "--help") 
+if (ARGV.count < 1|| ARGV.count > 3 || ARGV[0] == "-h" || ARGV[0] == "--help") 
 	puts "Usage: nginx_parslog.rb access_log_filename [HTTP response code position] [request time position]"
 	puts "If you not shure - add filename only and follow instructions"
 	exit(254)
@@ -12,7 +12,7 @@ $filename = ARGV[0]
 $response_pos = ARGV[1]||''
 $rtime_pos = ARGV[2]||''
 
-if not File.exist?($filename)
+unless File.exist?($filename)
 	puts "File #{$filename} not found"
 	exit(255)
 end
@@ -34,68 +34,72 @@ else
 end
 
 #scan first line and parsing
-$codescan=field_values.scan(/(\[[^\[]+\]|"[^"]+"|^\S+|\s[^"\[\s]+)/)
-$codescan.each do |code| 
-	code.each(&:lstrip!) 
-	code.each { |p| p.tr!('"','')}
-end
+REG_SCAN=/(\[[^\[]+\]|"[^"]+"|^\S+|\s[^"\[\s]+)/
+$codescan=field_values.scan(REG_SCAN)
+$codescan.each do |code|
+	 code.each(&:lstrip!)
+	 code.each{|p| p.tr!('"','')}
+end	
 $codescan.flatten!
 $lengh = $codescan.length
 
 #check arguments values
-$rop = Integer($response_pos) rescue nil
-$rot = Integer($rtime_pos) rescue nil
 
-if ($rop == nil || $rot == nil)
-	puts "unknown arguments format, use number values"
-	exit(253)
-end
-if $rop >= $lengh
-	puts "$status field can't be more #{$lengh-1}"
-	exit(253)
-end
-if $rot >= $lengh
-	puts "$request_time field can't be more #{$lengh-1}"
-	exit(253)
-end
-if $rot == $rop
-	puts "$status field can't be equal $request_time"
-	exit(253)
-end
-
-
-#if not all arguments
-prompt = '>'
-if $response_pos.empty? or $rtime_pos.empty?
-
-	while  $response_pos.empty?
-		puts `clear`, "\n\n"
-		$codescan.each_with_index { |code, ind| puts "#{ind}:\t#{code}" }
-		puts "\nenter HHTP response code position\n\n"
-		print prompt
-		$response_pos = STDIN.gets.chomp
-		$rp = Integer($response_pos) rescue nil
-		case $rp
-	 	when 0...$lengh
-		else 
-			$response_pos = ''
+def check_arg(b)
+	unless b.nil?
+		a = Integer(b) rescue nil
+		if a.nil?
+			puts "unknown arguments format, use number values, or just file name"
+			exit(253)
 		end
 	end
+	return a
+end
 
-	while  $rtime_pos.empty? or $rt == $rp
-		puts `clear`, "\n\n"
-		$codescan.each_with_index { |code, ind| puts "#{ind}:\t#{code}" }
-		puts "\nenter request time position\n\n"
-		print prompt
-		$rtime_pos = STDIN.gets.chomp
-		$rt = Integer($rtime_pos) rescue nil
-		case $rt
-		when 0...$lengh
-	 	else
-			$rtime_pos = ''
+unless ARGV.count == 1
+$rp = check_arg($response_pos)
+$rt = check_arg($rtime_pos)
+
+	if $rp >= $lengh
+		puts "$status field can't be more #{$lengh-1}"
+		exit(253)
+	end
+	if $rt >= $lengh
+		puts "$request_time field can't be more #{$lengh-1}"
+		exit(253)
+	end
+	if $rt == $rop
+		puts "$status field can't be equal $request_time"
+		exit(253)
+	end
+end
+
+	puts "rot=#{$rt} rop=#{$rp}"
+def read_console(message)
+	a = ''
+	status = ''
+	while a == ''
+		#puts `clear`, "\n\n"
+	        $codescan.each_with_index { |code, ind| puts "#{ind}:\t#{code}" }
+	        puts "#{status}\n#{message}\n\n"
+	        print '>'
+	        answer = STDIN.gets.chomp
+	        a = Integer(answer) rescue nil
+		unless (0...$lengh) === a
+			status = 'Error number. '
+			a = ''
 		end
 	end
+	return a
+end
 
+if ARGV.count.to_i == 1 
+	$rp = read_console("enter HHTP response code position")
+	puts "rot=#{$rt} rop=#{$rp}"
+	until  $rt == $rp
+	puts "rtot=#{$rt} rop=#{$rp}"
+		$rt = read_console("enter request time position")
+	end
 end
 
 
@@ -109,23 +113,25 @@ def scan_line(line)
 		l.each(&:lstrip!)
 		l.each { |p| p.tr!('"','')}
 	end
-        c = linescan.at($response_pos.to_i)
+        c = linescan.at($rp.to_i)
 	if c.last == "200"
-		$fields.push(linescan[$rtime_pos.to_i]) 
+		$fields.push(linescan[$rt.to_i]) 
 	end
 end
-
+a=0
 case filetype
 when "text/plain"
 	#content = File.open($filename)
 	File.readlines($filename).each do |l|
 		scan_line(l)
+	a=a+1
 	end
 when "application/gzip"
 	zipfile = File.open($filename)
 	gz = Zlib::GzipReader.new(zipfile)
 	gz.each_line do |l|
 		scan_line(l)
+	a=a+1
 	end
 	gz.close
 else
@@ -140,7 +146,7 @@ c = $fields.length
 f = $fields.sort
 l = f.last
 perc = [25,50,75,95]
-puts "\nTotal count of HTTP200 is - #{(c*0.95).to_i} from #{c}.\n\n"
+puts "\nTotal count of HTTP200 is - #{c} from #{a}.\n\n"
 for i in perc do
 	ou = f.at((c*i/100))
 	puts "#{i}% percentile is #{ou.last} msec"
