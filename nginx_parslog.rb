@@ -118,20 +118,20 @@ def scan_line(line)
 		$fields.push(linescan[$rt.to_i]) 
 	end
 end
-a=0
+t=0
 case filetype
 when "text/plain"
 	#content = File.open($filename)
 	File.readlines($filename).each do |l|
 		scan_line(l)
-	a=a+1
+	t=t+1
 	end
 when "application/gzip"
 	zipfile = File.open($filename)
 	gz = Zlib::GzipReader.new(zipfile)
 	gz.each_line do |l|
 		scan_line(l)
-	a=a+1
+	t=t+1
 	end
 	gz.close
 else
@@ -146,7 +146,7 @@ c = $fields.length
 f = $fields.sort
 l = f.last
 perc = [25,50,75,95]
-puts "\nTotal count of HTTP200 is - #{c} from #{a}.\n\n"
+puts "\nTotal count of HTTP200 is - #{c} from #{t}.\n\n"
 for i in perc do
 	ou = f.at((c*i/100))
 	puts "#{i}% percentile is #{ou.last} msec"
