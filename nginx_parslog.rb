@@ -114,20 +114,20 @@ def scan_line(line)
 		$fields.push(linescan[$rtime_pos.to_i]) 
 	end
 end
-
+t = 0
 case filetype
 when "text/plain"
 	#content = File.open($filename)
 	File.readlines($filename).each do |l|
 		scan_line(l)
-	t=t+1
+	t = t + 1
 	end
 when "application/gzip"
 	zipfile = File.open($filename)
 	gz = Zlib::GzipReader.new(zipfile)
 	gz.each_line do |l|
 		scan_line(l)
-	t=t+1
+	t = t + 1
 	end
 	gz.close
 else
