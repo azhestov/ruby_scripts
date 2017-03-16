@@ -1,2 +1,2 @@
 # ruby_scripts
-Some script for work and learning
+Some scripts for work and learning
