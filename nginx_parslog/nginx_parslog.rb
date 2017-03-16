@@ -46,6 +46,8 @@ $lengh = $codescan.length
 $rop = Integer($response_pos) rescue nil
 $rot = Integer($rtime_pos) rescue nil
 
+if ARGV.count > 1
+
 if ($rop == nil || $rot == nil)
 	puts "unknown arguments format, use number values"
 	exit(253)
@@ -63,7 +65,7 @@ if $rot == $rop
 	exit(253)
 end
 
-
+end
 #if not all arguments
 prompt = '>'
 if $response_pos.empty? or $rtime_pos.empty?
@@ -111,21 +113,26 @@ def scan_line(line)
 	end
         c = linescan.at($response_pos.to_i)
 	if c.last == "200"
-		$fields.push(linescan[$rtime_pos.to_i]) 
+          if linescan[$rtime_pos.to_i].nil?
+             linescan[$rtime_pos.to_i] = ["0.0"]
+          end
+		$fields.push(linescan[$rtime_pos.to_i])
 	end
 end
-
+t = 0
 case filetype
 when "text/plain"
 	#content = File.open($filename)
 	File.readlines($filename).each do |l|
 		scan_line(l)
+	t = t + 1
 	end
 when "application/gzip"
 	zipfile = File.open($filename)
 	gz = Zlib::GzipReader.new(zipfile)
 	gz.each_line do |l|
 		scan_line(l)
+	t = t + 1
 	end
 	gz.close
 else
@@ -140,7 +147,7 @@ c = $fields.length
 f = $fields.sort
 l = f.last
 perc = [25,50,75,95]
-puts "\nTotal count of HTTP200 is - #{(c*0.95).to_i} from #{c}.\n\n"
+puts "\nTotal count of HTTP200 is - #{c} from #{t}.\n\n"
 for i in perc do
 	ou = f.at((c*i/100))
 	puts "#{i}% percentile is #{ou.last} msec"
