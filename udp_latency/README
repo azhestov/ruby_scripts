@@ -1,0 +1,4 @@
+#GPL v2
+#ruby script
+#writed by Anatoly Zhestov(azhestov@gmail...) in a fit of madness
+udp/tcp latency - small client-server for check latency and lost packets between two hosts.
