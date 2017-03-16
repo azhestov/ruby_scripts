@@ -3,7 +3,7 @@ require 'socket'
 require 'ipaddr'
 
 if ARGV.length != 2
-    puts "Usage: ./client.rb interface_name port"
+    puts "Usage: ./server_tcp.rb interface_name port"
     exit 255
 end
 

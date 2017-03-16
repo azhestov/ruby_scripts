@@ -4,7 +4,7 @@ require 'socket'
 
 
 if ARGV.length != 2
-    puts "Usage: ./client.rb hostname port"
+    puts "Usage: ./client_tcp.rb hostname port"
     puts "(start remote server first)"
     exit 255
 end
