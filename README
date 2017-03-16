@@ -2,6 +2,7 @@
 #ruby script
 #writed by Anatoly Zhestov(azhestov@gmail...) in a fit of madness
 
+nginx parslog/
 nginx_parslog.rb is simple tool for calculate HTTP 200 response time
 (or any time in similar format)by percentile. Before starting - look
 at you nginx log format and remember field number for $status and 
@@ -34,3 +35,5 @@ simple output for external scripts
 opimization for big logs
 read from stream
 read from socket	
+
+udp/tcp latency - small client-server for check latency and lost packets between two hosts.
